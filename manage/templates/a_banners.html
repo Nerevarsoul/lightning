@@ -1,0 +1,170 @@
+{% extends "base_main.html" %}
+
+{% block meta %}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/a_banners.css') }}" />
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-ui-1.10.4.custom.min.js') }}"></script>
+
+    {#<script type="text/javascript" src="{{ url_for('static', filename='js/special/blocked_history.js') }}"></script>#}
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/a_banner.js') }}"></script>
+    
+
+{% endblock %}
+
+{% block content %}
+
+    {% include "includes/a_options.html" %}
+
+    <div class="top_white"></div>
+
+    <table id="table_head">
+
+        <thead>
+            <tr>
+                <td colspan="7">Работа с баннерами</td>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td class="image" rowspan="2">Фото</td>
+                <td class="name" rowspan="2">Название</td>
+                <td class="effect" rowspan="2">Эффект</td>
+                <td class="font" colspan="3">Шрифт</td>
+                <td class="operation" rowspan="2">Операции</td>
+            </tr>
+
+            <tr>
+                <td class="font_type">тип</td>
+                <td class="font_color">цвет</td>
+                <td class="font_size">размер</td>
+            </tr>
+            
+        </tbody>
+
+    </table>
+
+    <table id="table_body">
+
+        <tbody>
+
+            <tr>
+                <td class="image">-</td>
+                <td class="name">-</td>
+                <td class="effect">-</td>
+                <td class="font_type">-</td>
+                <td class="font_color">-</td>
+                <td class="font_size">-</td>
+                <td class="operation">
+
+                    <form name="post_banner" action="{{ url_for("AdminWorkBannerView:post_banner") }}" method="post" enctype="multipart/form-data" id="post_banner">
+
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input class="upload" type="file" name="file" accept="image/jpeg">
+                        <input type="submit" class="add" value="Добавить">
+
+                    </form>
+
+                </td>
+            </tr>
+
+            {% if g.banners %}
+
+                <form name="edit_banner" action="{{ url_for("AdminWorkBannerView:edit_banner") }}" method="post" id="edit_banner">
+
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {% for banner in g.banners.values() %}
+
+                        <tr class="banner" id="{{banner.id}}">
+
+                            <td class="image">
+                                {% if banner.image %}
+                                    <img src="{{ url_for("media", path_to_file=banner.image.path, file_name=banner.image.file_name) }}"/>
+                                {% endif %}
+                            </td>
+
+                            <td class="name">
+                                <input type="text" value="{{ banner.image.description or ""}}" name="{{ banner.id | string + "##name" }}">
+                            </td>
+
+                            <td class="effect">
+                                <input type="text" name="{{ banner.id | string + "##effect" }}" value="{{ banner.effect or "" }}">
+                            </td>
+
+                            <td class="font_type">
+                                <select type="text" name="{{ banner.id | string + "##font_type" }}">
+                                    <option selected value="{{ banner.font_type }}">{{ banner.font_type }}</option>
+                                    <option value="Geneva">Geneva</option>
+                                    <option value="Arial">Arial</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="sans-serif">sans-serif</option>
+                                </select>
+                            </td>
+
+                            <td class="font_color">
+                                <input type="text" name="{{ banner.id | string + "##font_color" }}" value="{{ banner.font_color }}">
+                            </td>
+
+                            <td class="font_size">
+                                <select type="text" name="{{ banner.id | string + "##font_size" }}">
+                                    <option selected value="{{ banner.font_size }}">{{ banner.font_size }}</option>
+                                    <option value="20">20</option>
+                                    <option value="22">22</option>
+                                    <option value="24">24</option>
+                                    <option value="26">26</option>
+                                </select>
+                            </td>
+
+                            <td class="operation">
+                                <a href="{{ url_for("AdminWorkBannerView:change_order") }}" class="up">Вверх</a>
+                                <a href="{{ url_for("AdminWorkBannerView:delete_banner") }}" class="delete">Удалить</a>
+                                <a href="{{ url_for("AdminWorkBannerView:change_order") }}" class="down">Вниз</a>
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    <tr id="banner_buttons">
+
+                        <td colspan="7">
+
+                            <div class="center_buttons">
+                                <input id="banner_submit" type="submit" value="Сохранить">
+                            </div>
+
+                            <div class="center_buttons">
+                                <input id="banner_clear" type="reset" value="Очистить форму">
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </form>
+
+            {% else %}
+
+                <tr class="empty_result">
+
+                    <td colspan="7">
+                        <p>Баннеров не обнаружено</p>
+                    </td>
+
+                </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+{% endblock %}
+

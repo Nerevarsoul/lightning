@@ -1,0 +1,215 @@
+/* Настройка страницы /manage/a_banners.html
+------------------------------------------- */
+
+/* верхняя белая полоса (скрыть проматываемую таблицу) */
+#content .top_white {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 10px;
+    background-color: #ffffff;
+    z-index: 500;
+}
+
+
+/* шапка таблицы результатов */
+#table_head {
+    position: fixed;
+    /*table-layout: fixed;*/
+    width: 98%;
+    margin: 10px 1% 0 1%;
+    vertical-align: middle;
+    color: #ffffff;
+    background: #00b2b0;
+    border-top: 2px solid #000000;
+}
+
+/* ячейка шапки таблицы результатов */
+#table_head td {
+    height: 35px;
+    padding: 3px 0;
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid #000000;
+}
+
+/* таблица результатов */
+#table_body {
+    float: left;
+    /*table-layout: fixed;*/
+    width: 98%;
+    margin: 139px 1% 0 1%;
+    color: #007674;
+}
+
+/* ячейка таблицы результатов */
+#table_body td {
+    vertical-align: middle;
+    text-align: center;
+    border: 2px solid #000000;
+}
+
+#table_body td p {
+    margin: 9px 0;
+}
+
+/* строка "товар не обнаружен" */
+.empty_result {
+    font-size: 14.5pt;
+    font-weight: bold;
+}
+
+/* изображение в таблице результатов */
+#table_body img {
+    display: display-block;
+    width: 140px;
+}
+
+/* размеры ячеек */
+/* столбец изображения */
+td.image {
+    width: 180px
+}
+
+/* название */
+td.name {
+    width: 18%;
+}
+
+/* эффект */
+td.effect {
+    width: 18%;
+}
+
+/* тип шрифта */
+td.font_type {
+    width: 10%;
+}
+
+/* цвет шрифта */
+td.font_color {
+    width: 10%;
+}
+
+/* размер шрифта */
+td.font_size {
+    width: auto;
+}
+
+/* опции */
+td.operation {
+    width: 18%;
+} 
+
+/* кнопки вверх вниз добавить */
+.operation a,  form input{
+    display: inline-block;
+    width: 90%;
+    height: 27px;
+    margin: 2% 0;
+    padding: 2px 0;
+    font-size: 13pt;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+    color: #ffffff;
+    background-color: #016d75;
+    border: 2px solid #014048;
+    border-bottom-width: 3px;
+    border-radius: 8px 0 8px 0;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+/* кнопки вверх вниз добавить hover */
+.operation a:hover, form input:hover {
+    padding-top: 3px;
+    background-color: #018f9c;
+    border-bottom-width: 2px;
+}
+
+/* спрятать "Обзор.." */
+input.upload {
+    overflow: hidden;
+    height: 0;
+    width: 0;
+    border: none;
+}
+
+/* поля ввода в таблице */
+.banner input {
+    box-sizing: border-box;
+    width: 99%;
+    margin: 3px 0;
+    padding: 3px 0;
+    text-align: center;
+    font-size: 13pt;
+    color: #023834;
+    font-weight: bold;
+    border-width: 0 2px;
+    border-color: #01737b;
+    border-style: solid;
+    border-radius: 5px;
+    background-color: #01a1a9;
+}
+
+/* поле выбора */
+.banner select {
+    width: 99%;
+    height: 23px;
+    margin: 3px 0;
+    font-size: 13pt;
+    color: #ffffff;
+    background-color: #01868e;
+    border: none;
+    border-radius: 6px;
+}
+
+/* убрать бордер в последней строке таблицы */
+#banner_buttons td {
+    border: none;
+}
+
+/* кнопки под таблицей */
+#banner_buttons input {
+    display: block;
+    box-sizing: border-box;
+    width: 60%;
+    height: 30px;
+    margin: 2% 0;
+    padding: 3px 0;
+    font-size: 13pt;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    color: #ffffff;
+    background-color: #016d75;
+    border: 2px solid #014048;
+    border-bottom-width: 3px;
+    border-radius: 8px 0 8px 0;
+    cursor: pointer;
+}
+
+/* кнопки hover */
+#banner_buttons input:hover {
+    padding-top: 4px;
+    background-color: #018f9c;
+    border-bottom-width: 2px;
+}
+
+/* блок для центрироания кнопок */
+.center_buttons {
+    display: inline-block;
+    width: 40%;
+    margin: 0 1%;
+}
+
+/* кнопка "Сохранить" */
+#banner_submit {
+    float: right;
+}
+
+/* кнопка "Очистить" */
+#banner_clear {
+    float: left;
+}
