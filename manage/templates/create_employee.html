@@ -1,0 +1,47 @@
+{% extends "base_main.html" %}
+
+{% from "macros/universal_form.html" import universal_form %}
+
+{% block meta %}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+{% endblock %}
+
+{% block css %}
+    {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/special/universal_form.css') }}" />
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jq_date_picker.css') }}" />
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/create_employee.css') }}">
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery/jquery-ui-1.10.4.custom.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery/i18n/date_picker-ru.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/special/universal_form.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/create_employee.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% include "includes/a_options.html" %}
+
+    <div id="content">
+
+        <div class="full_order_info">
+
+            {% if form.for_view %}
+                {{ universal_form(h1="Просмотр данных работника", form=form, need_save=false, need_clear=false, need_required=false) }}
+            {% elif form.for_change %}
+                {{ universal_form(h1="Редактирование данных работника", form=form) }}
+            {% else %}
+                {{ universal_form(h1="Создание работника", form=form) }}
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endblock %}

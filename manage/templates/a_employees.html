@@ -1,0 +1,35 @@
+{% extends "base_main.html" %}
+
+{% from "macros/universal_show_table.html" import universal_show_table %}
+
+{% block meta %}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/special/product_search.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/special/universal_show_table.css') }}" />
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/a_employees.css') }}" />
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/special/move_top.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/special/show_hide_img.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/a_employees.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+
+    {% include "includes/a_options.html" %}
+
+    <div class="top_white"></div>
+
+    <div id="table_block">
+        {{ universal_show_table(name=name, data=table_data, error_message="Товар не обнаружен") }}
+    </div>
+
+{% endblock %}
+
