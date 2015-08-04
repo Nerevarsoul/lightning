@@ -39,10 +39,10 @@ class AdminWorkBannerView(FlaskView):
             .order_by(Image.comment.desc()) \
             .all()
 
-        attributes = ("effect", "font_type", "font_color", "font_size")
+        attributes = ("position", "effect", "font_type", "font_color", "font_size")
         for banner in banners: 
             [setattr(banner, attributes[pos], value)
-                for pos, value in enumerate(banner.image.comment.split(u":")[1:])]   
+                for pos, value in enumerate(banner.image.comment.split(u":"))]   
     
         g.banners = OrderedDict(((unicode(banner.id), banner) for banner in banners))
 
@@ -60,6 +60,7 @@ class AdminWorkBannerView(FlaskView):
         msg = ("AdminWorkBannerView:get_banner_by_id: "
                 "banner with id = {}")
         g.banner = get_one(banner, msg.format(banner_id))
+
 
     @access_check("admin")
     @before(get_banners)
@@ -81,35 +82,32 @@ class AdminWorkBannerView(FlaskView):
                "unexpected format {}")
             app.logger.error(msg.format(slugify_ru(img_format)))
             return abort(404)
-        path="shop_img"
-        filename = safe_join(path, image.filename)
-        shop_img_path = os.path.join(app.config["MEDIA_DIR"], filename)
 
-        i = 1
-        while os.path.exists(shop_img_path):
-            image.filename = image.filename.split(".")
-            image.filename = u".".join((image.filename[0] + str(i), 
-                image.filename[1]))
-            filename = safe_join(path, image.filename)
-            shop_img_path = os.path.join(app.config["MEDIA_DIR"], filename)
-            i += 1
-
-        image.save(shop_img_path, buffer_size=1638400)
-
-        shop_img = ShopImage("banners")
-        shop_img.image = Image(file_name=image.filename, 
-            description="", path=path) 
-
+        shop_img = ShopImage(task="banners")
         g.db_session.add(shop_img)
 
         g.db_session.flush()
 
-        shop_img.image.comment = u":".join((str(shop_img.id).zfill(5), 
+        # resize and save image
+        buffer_img = UIC() 
+        path="shop_img"
+        img_size = (160, 160)
+        filename = u"{}.jpg".format(str(shop_img.id).zfill(5))
+        shop_img_path = os.path.join(app.config["MEDIA_DIR"], path, filename)
+        buffer_img.add_image(path=shop_img_path, byte_obj=image)
+        buffer_img.resize(img_size)
+        buffer_img.save()
+
+        comment = u":".join((str(shop_img.id).zfill(5), 
             "", "", "", ""))
+
+        shop_img.image = Image(file_name=filename, 
+            description="", path=path, comment=comment) 
 
         g.db_session.commit()
 
         return redirect(url_for("AdminWorkBannerView:banners"))
+
 
     @access_check("admin", u"запись")
     @before(get_banner_by_id)
@@ -128,9 +126,9 @@ class AdminWorkBannerView(FlaskView):
             msg = ("AdminWorkBannerView:delete_banner"
                 "error {}")
             app.logger.error(msg.format(e))
-            return abort(404)
         
         return jsonify(status=0)
+
 
     @access_check("admin", u"запись")
     @before(get_banners)
@@ -147,6 +145,7 @@ class AdminWorkBannerView(FlaskView):
                 continue
 
             banner_id, field = key.split("##")
+
             banner = g.banners[banner_id]
             
             if field == "name":
@@ -159,10 +158,10 @@ class AdminWorkBannerView(FlaskView):
 
         for i in change_banner:
             banner = g.banners[i]
-            attributes = ["effect", "font_type", "font_color", "font_size"]
+            attributes = ["position", "effect", 
+                            "font_type", "font_color", "font_size"]
             comment = [getattr(banner, attr)
                for attr in attributes]
-            comment.insert(0, banner.image.comment.split(u":")[0])
             banner.image.comment = u":".join(comment)
 
         g.db_session.commit()
@@ -175,11 +174,10 @@ class AdminWorkBannerView(FlaskView):
     def change_order(self):
         """Up and down button."""
         
-        if request.form["banner_id"].isdigit() and\
-        request.form["banner_goal_id"].isdigit():
-            banner = g.banners[request.form["banner_id"]]
-            banner_goal = g.banners[request.form["banner_goal_id"]]
-
+        banner = g.banners[request.form["banner_id"]]
+        banner_goal = g.banners[request.form["banner_goal_id"]]
+        
+        if banner and banner_goal:
             comment = banner.image.comment.split(u":")
             comment_goal = banner_goal.image.comment.split(u":")
             comment[0], comment_goal[0] = comment_goal[0], comment[0]
